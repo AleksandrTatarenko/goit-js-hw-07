@@ -34,11 +34,27 @@ function createPictureCard(galleryItems) {
 function onGalleryContainerClick(e) {
     e.preventDefault();
     const openUrl = e.target.dataset.source;
+    
+    const lightBoxEscConfig = {
+        onShow: () => {
+            document.addEventListener('keydown', onEscKeyPress)
+        },
+        onClose: () => {
+            document.removeEventListener('keydown', onEscKeyPress)
+        }
+    }
 
     const instance = basicLightbox.create(`
         <img src="${openUrl}">
-    `)
+    `,
+        lightBoxEscConfig);
 
     instance.show()
+    
+    function onEscKeyPress(e) { 
+    if (e.code === 'Escape' && instance.visible()) {
+        instance.close();
+    }
+}
 }
 
